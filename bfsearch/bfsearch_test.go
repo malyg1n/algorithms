@@ -2,53 +2,43 @@ package bfsearch_test
 
 import (
 	"algorithms/bfsearch"
-	"fmt"
+	"github.com/stretchr/testify/assert"
 	"testing"
 )
 
 func TestSearch(t *testing.T) {
-	search := "maggie"
-	items := &bfsearch.Item{
-		Name: "root",
-		Items: &[]bfsearch.Item{
-			{
-				Name: "homer",
-				Items: &[]bfsearch.Item{
-					{
-						Name: "item_1",
-					},
-					{
-						Name: "item_2",
-					},
-					{
-						Name: "item_3",
-					},
-				},
-			},
-			{
-				Name: "marge",
-				Items: &[]bfsearch.Item{
-					{
-						Name: "item_4",
-					},
-					{
-						Name: "item_2",
-					},
-					{
-						Name: "item_5",
-						Items: &[]bfsearch.Item{
-							{
-								Name: "item_6",
-							},
-							{
-								Name: "maggie",
-							},
-						},
-					},
-				},
-			},
-		},
+	search := "Dolly"
+
+	maggie := &bfsearch.Node{
+		Name: "Maggie",
+		Children: []*bfsearch.Node{&bfsearch.Node{
+			Name: search,
+		}},
 	}
-	result := bfsearch.Search(items, search)
-	fmt.Println(result)
+	bart := &bfsearch.Node{
+		Name: "Bart",
+	}
+	liza := &bfsearch.Node{
+		Name: "Liza",
+	}
+	homer := &bfsearch.Node{
+		Name:     "Homer",
+		Children: []*bfsearch.Node{bart, liza},
+	}
+	marge := &bfsearch.Node{
+		Name:     "Marge",
+		Children: []*bfsearch.Node{bart, liza, maggie},
+	}
+	root := &bfsearch.Node{
+		Name:     "Abraham Simpson",
+		Children: []*bfsearch.Node{homer, marge}, // Sweet home alabama
+	}
+	result := bfsearch.Search(root, search)
+	assert.Equal(t, search, result.Name)
+
+	result = bfsearch.Search(nil, search)
+	assert.Nil(t, result)
+
+	result = bfsearch.Search(root, "fake")
+	assert.Nil(t, result)
 }
